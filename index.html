@@ -1,0 +1,73 @@
+<html> 
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="./css/mystyle.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.0.min.js"></script>
+
+</head>
+<body>
+  <script src="js/check.js" ></script>
+  <script src="js/ajax.js" ></script>
+
+
+  <div id="bar1" class="input">
+    <form action ="./phpadddict/add_new.php" name="form2">
+      <button type ="submit" class ="btn btn-primary">新增</button> 
+      <button type ="reset" class ="btn btn-primary">重新輸入</button>
+      <br />
+      <br />
+      <label >詞彙新增在此，不同的詞彙麻煩請換行 </label>
+      <br />
+      <textarea id = "new_word" name="new_word" ></textarea>
+    </form>
+    
+  </div>
+
+  <div id="bar2" class="input">
+    <form action ="./phpadddict/add_del.php" name="form3">
+      <button type ="submit" class ="btn btn-primary">新增</button> 
+      <button type ="reset" class ="btn btn-primary">重新輸入</button>
+      <br />
+      <br />
+      <label >停止詞新增在此，不同的詞彙麻煩請換行 </label>
+      <br />
+      <textarea id = "del_word" name="del_word" ></textarea>
+    </form>
+    
+  </div>
+
+
+
+  <div id="bar3" class="input">
+	  <form action ="upload.php" name="form1" id = 'uploadform' method ="POST" enctype ="multipart/form-data" > 
+      <button type ="submit" class ="btn btn-primary">提交</button> 
+      <button type ="reset" class ="btn btn-primary">重新上傳</button> 
+      <br />
+      <br />
+      <p>如果要上傳多檔案，請打包成一個zip以後上傳</p>
+      <p>目前僅支援txt檔</p>
+      <input type="file" id ="my_file" name="my_file" value="檔案上傳"onchange="uploadChange()"><br /><br />
+      
+      <label >斷詞後跑TF-IDF：</label>
+      <input type="checkbox"  id = "tfidf" name="tfidf" value="1" onchange="boxChange()" >
+      <br />
+      <br />
+      
+    </form > 
+  </div>
+
+  <div class="loader" id = "loader"></div>
+  <br />
+  <div id = "loader2">  loading中  請稍後</div>
+
+
+  <div id = "result"></div>
+
+
+  
+
+
+</body>
+ 
+</html >
