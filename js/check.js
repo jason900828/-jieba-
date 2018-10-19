@@ -18,7 +18,7 @@ function getFileExtension(filename) {
 function uploadChange(){
 
   var fullPath = document.getElementById('my_file').value;//get 檔案路徑
-
+  
   if (fullPath) {
     var startIndex = (fullPath.indexOf('\\') >= 0 ? fullPath.lastIndexOf('\\') : fullPath.lastIndexOf('/'));
     /*indexOf() 方法可返回某個指定的字符串值在字符串中首次出現的位置。
@@ -34,11 +34,10 @@ function uploadChange(){
     if(F_Extension!='zip'){
       document.getElementById("tfidf").checked = false;
     }
+    
+    var label=document.getElementById("file_label");
+    label.innerText=filename;
   }
 }
-
-
- 
-      
 
 

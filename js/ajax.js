@@ -4,7 +4,10 @@ $(document).ready(function (e){
     $(document).ajaxStart(function(){
         $("#loader").show();
         $("#loader2").show();
-        $(".input").hide();
+        $("#Description").hide();
+        $("#bar1").hide();
+        $("#bar2").hide();
+        $("#bar3").hide();
     });
     
     var d ;
@@ -18,7 +21,6 @@ $(document).ready(function (e){
             cache: false,
             processData:false,
             success: function(data){
-                alert("成功執行");
                 d = data;
             },
             
