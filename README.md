@@ -13,6 +13,6 @@
 
 33.4MB六個文檔 有跑TF-IDF     花費1分42秒
 
-123MB六個文檔  有跑TF-IDF     花費18分24秒
+123MB三百八十四個文檔  有跑TF-IDF     花費18分24秒
 
 使用語言:HTML、JavaScript、jQuery、CSS、PHP、Python
