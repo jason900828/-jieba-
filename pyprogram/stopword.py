@@ -20,5 +20,6 @@ def StopWord_combine():#將原本的stopword加上使用者不想看到的word
                 all_stop_f.write(word)
             else:
                 all_stop_f.write(word+'\n')
-            
+
+      
 StopWord_combine()

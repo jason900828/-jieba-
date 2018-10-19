@@ -72,7 +72,7 @@ def get_data(Folder_name):##提取data，文本路徑放置在data資料夾裡�
                     continue
                 else:
                     data.append(words)
-            print(path+file_format[0]+" already loaded"+"<br/>")
+            print("already loaded"+"<br/>")
 
     elif '.zip' in file_format[0]:#多文本讀取
         #print(path+str(file_format[0]+'<br/>'))
@@ -100,7 +100,7 @@ def get_data(Folder_name):##提取data，文本路徑放置在data資料夾裡�
                     data.append(str_)
                 txt_long.append(len(data))
                 
-            print(path+file_format[0]+" already loaded,doc number : "+str(len(a_lst))+"<br/>")
+            print("already loaded,doc number : "+str(len(a_lst))+"<br/>")
         else :#zip檔大於4個文本，直接讀取每一個文本
             for i in a_lst:
                 data_str = azip.read(i).decode('utf-8')
@@ -115,7 +115,7 @@ def get_data(Folder_name):##提取data，文本路徑放置在data資料夾裡�
                 data_str = data_str.replace('\n','')
                 data.append(data_str)#不須切割，因為文本數量很多，直接儲存在list分割
                 
-            print(path+file_format[0]+" already loaded,doc number : "+str(len(a_lst))+"<br/>")
+            print("already loaded,doc number : "+str(len(a_lst))+"<br/>")
 
     return data,txt_long,file_format[0]
 
@@ -141,7 +141,7 @@ def store_data(path,txt_long_lst,file_format,data):
             for words in data:
 
                 output.write(words+'\n')
-        print(path + file_format + " already saved<br/>")
+        print(" already saved<br/>")
 
     else:  #多文本儲存
         if len(txt_long_lst) == 0:#如果txt_long_lst裡面為空值，代表文本數超過4個，故儲存方法不同
@@ -154,7 +154,7 @@ def store_data(path,txt_long_lst,file_format,data):
                 output.write(doc)
                 output.close()
                 k += 1
-            print(path+file_format+" already saved,doc number : "+str(len(data))+"<br/>")
+            print(" already saved,doc number : "+str(len(data))+"<br/>")
 
         else:#txt_long_lst不為空值，故抓取每個文章長度
             k = 0 
@@ -169,7 +169,7 @@ def store_data(path,txt_long_lst,file_format,data):
                 start = i
                 output.close()
                 k += 1
-            print(path+file_format+" already saved,doc number : "+str(len(txt_long_lst))+"<br/>")
+            print(" already saved,doc number : "+str(len(txt_long_lst))+"<br/>")
 
 
 
