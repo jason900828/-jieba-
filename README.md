@@ -1,4 +1,7 @@
 # -分詞系統(基於jieba)-
+*upload.php與calltf-idf.php內有呼叫python腳本的命令，可以依照需求更改命令
+*exec命令範例：'python ./pyprogram/jieba-mutliprocessing.py '.$timenamefolder
+
 打開index.html
 依照上面的步驟上傳檔案並設定停止詞跟新增詞
 
