@@ -1,8 +1,12 @@
 # -分詞系統(基於jieba)-
 *以下php內有呼叫python腳本的命令，可以依照需求更改命令
+
 upload.php
+
 calltf-idf.php
+
 phpadddict/add_del.php
+
 phpadddict/add_new.php
 
 *exec命令範例：'python ./pyprogram/jieba-mutliprocessing.py '.$timenamefolder
