@@ -10,7 +10,7 @@ def StopWord_combine(Client_IP):#將原本的stopword加上使用者不想看到
             if word not in stop_word:
                 stop_word.append(word)
 
-    with open('./all_dict/'+Client_IP+'/all_stop.txt', 'a', encoding='utf-8') as all_stop_f :
+    with open('./all_dict_user/'+Client_IP+'/all_stop.txt', 'a', encoding='utf-8') as all_stop_f :
         all_stop_f.write('\n')
         for word in stop_word:
             if '\n' in word:
@@ -21,4 +21,3 @@ def StopWord_combine(Client_IP):#將原本的stopword加上使用者不想看到
 import sys
 Client_IP = str(sys.argv[1])
 StopWord_combine(Client_IP)
-

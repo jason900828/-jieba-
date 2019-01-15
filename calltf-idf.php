@@ -42,7 +42,7 @@ function uploadfile($file_id,$uploaddir,$file_name){
 $timenamefolder=$_POST["id_number"];
 
 echo 
-uploadfile('del_file','./all_dict/'.$timenamefolder.'/','all_stop.txt');
+uploadfile('del_file','./all_dict_user/'.$timenamefolder.'/','all_stop.txt');
 
 
 
@@ -65,23 +65,17 @@ $uploaddir = './data/'.$timenamefolder.'/';//儲存路徑
 
 
 
-echo shell_exec("py -3 ./pyprogram/tf-idftry.py ".$timenamefolder." ".$_POST["tfidf_rank"]);
+echo exec("python ./pyprogram/tf-idftry.py ".$timenamefolder." ".$_POST["tfidf_rank"]." 1",$array, $ret);
 
 
 $time3 = date("Y-m-d H:i:s");
 echo '開始時間'.$time1.'<br />';
 echo '總執行時間：'.exec_time($time3,$time1).'<br />';
-echo '<br />'."<button class =\"btn btn-primary\" type=\"button\" onclick=\"location.href='./phpdownload/downloadcut.php?id=".$timenamefolder."'\">下載斷詞</button>".'<br />'.'<br />';
-        
 
-  
-echo "<button class =\"btn btn-primary\"type=\"button\" onclick=\"location.href='./phpdownload/downloadTF-IDF.php?id=$timenamefolder'\"> 下載TF-IDF</button>".'<br />'.'<br />';
+echo "<br/><br/><button class =\"btn btn-primary\"type=\"button\" onclick=\"location.href='./phpdownload/downloadkeyword.php?id=$timenamefolder'\"> 下載結果</button>".'<br />';
+echo "<br/><font color=\"#FF0000\">csv檔為big5編碼，請使用big5編碼開啟檔案</font><br/>";
 
-echo "<button class =\"btn btn-primary\"type=\"button\" onclick=\"location.href='./phpdownload/downloadkeyword.php?id=$timenamefolder'\"> 下載keyword</button>".'<br />';
-echo "<br/><font color=\"#FF0000\">csv檔為utf-8編碼，請使用utf-8編碼開啟檔案</font><br/>";
-
-echo "<br/><button class =\"btn btn-primary\"type=\"button\" onclick=\"location.href='./tf-idfagain.html'\"> 重作TF-IDF</button>".'<br />';
-echo "<br/><font color=\"#FF0000\">如要重做，請複製以下數字</font><p>".$timenamefolder."</p>";
+echo "<br/><button class =\"btn btn-primary\"type=\"button\" onclick=\"location.href='./tf-idfagain.php?timenamefolder=$timenamefolder'\"> 重作TF-IDF</button>";
 
     
 

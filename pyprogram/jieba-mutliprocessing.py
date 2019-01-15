@@ -39,7 +39,7 @@ if __name__ == '__main__':
     
     
     Folder_name = sys.argv[1]#2018101510141823
-    f = open('excel_category.json','r',encoding = 'utf-8')
+    f = open('./all_dict_user/'+str(Folder_name)+'/excel_category.json','r',encoding = 'utf-8')
     jsondata = json.loads(f.read())
     excel_where_category =[jsondata['excel_category']]
     excel_where_content_at = [jsondata['excel_content']]
@@ -54,7 +54,10 @@ if __name__ == '__main__':
     print("start MP:"+str(t4-t3)+"<br/>")
     
     #print('wait parallel cut word<br/>')
-    processor = mp.cpu_count()
+    if (len(cuts)>1) and (len(cuts)<mp.cpu_count()):
+        processor = len(cuts)
+    else:
+        processor = mp.cpu_count()
     
     
 

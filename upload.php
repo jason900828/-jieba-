@@ -86,20 +86,18 @@ $data = "{
     \"excel_category\":\"$excel_category\",
     \"excel_content\":\"$excel_content\"
 }";
-file_put_contents( './excel_category.json' , $data);
+file_put_contents( './all_dict_user/'.$timenamefolder.'/excel_category.json' , $data);
 
 $cmd = 'python ./pyprogram/jieba-mutliprocessing.py '.$timenamefolder;//.' '.'  2>error.txt 2>&1';
 
 echo shell_exec($cmd);#Windows系統呼叫與傳值給python
 
 
-if($_POST["tfidf"] == '1')
-{
-  echo exec("python ./pyprogram/tf-idftry.py ".$timenamefolder." ".$_POST["tfidf_rank"],$array, $ret);
+if($_POST["tfidf"]=='1'){
+  echo exec("python ./pyprogram/tf-idftry.py ".$timenamefolder." ".$_POST["tfidf_rank"]." 1",$array, $ret);
 }
-
 else{
-  echo $_POST["tfidf"]."沒有跑tf-idf<br/>";
+  echo exec("python ./pyprogram/tf-idftry.py ".$timenamefolder." ".$_POST["tfidf_rank"]." 0",$array, $ret);
 }
 
 $time3 = date("Y-m-d H:i:s");
@@ -107,17 +105,15 @@ echo '開始時間'.$time1.'<br />';
 echo '上傳時間統計：'.exec_time($time2,$time1).'<br />';
 echo '分詞時間統計：'.exec_time($time3,$time2).'<br />';
 echo '總執行時間：'.exec_time($time3,$time1).'<br />';
-echo '<br />'."<button class =\"btn btn-primary\" type=\"button\" onclick=\"location.href='./phpdownload/downloadcut.php?id=".$timenamefolder."'\">下載斷詞</button>".'<br />'.'<br />';
-        
 
-if($_POST["tfidf"] == '1'){   
-    echo "<button class =\"btn btn-primary\"type=\"button\" onclick=\"location.href='./phpdownload/downloadTF-IDF.php?id=$timenamefolder'\"> 下載TF-IDF</button>".'<br />'.'<br />';
+echo "<br/><br/><button class =\"btn btn-primary\"type=\"button\" onclick=\"location.href='./phpdownload/downloadkeyword.php?id=$timenamefolder'\"> 下載結果</button>".'<br />';
+echo "<br/><font color=\"#FF0000\">csv檔為big5編碼，請使用big5編碼開啟檔案</font><br/>";
 
-    echo "<button class =\"btn btn-primary\"type=\"button\" onclick=\"location.href='./phpdownload/downloadkeyword.php?id=$timenamefolder'\"> 下載keyword</button>".'<br />';
-    echo "<br/><font color=\"#FF0000\">csv檔為utf-8編碼，請使用utf-8編碼開啟檔案</font><br/>";
-    echo "<br/><button class =\"btn btn-primary\"type=\"button\" onclick=\"location.href='./tf-idfagain.html'\"> 重作TF-IDF</button>".'<br />';
-    echo "<br/><font color=\"#FF0000\">如要重做，請複製以下數字</font><p>".$timenamefolder."</p>";
+if($_POST["tfidf"]=='1'){
+  echo "<br/><button class =\"btn btn-primary\"type=\"button\" onclick=\"location.href='./tf-idfagain.php?timenamefolder=$timenamefolder'\"> 重作TF-IDF</button>";
 }
+
+
   
 echo exec("python ./pyprogram/del_file.py ".$timenamefolder,$array1, $ret1);
     

@@ -3,10 +3,14 @@
 
 
 function Do_new($Client_IP_n,$txt_n){
-  if (!file_exists("./all_dict/".$Client_IP_n."/")){
-    mkdir("./all_dict/".$Client_IP_n."/");
+  if (!file_exists("./all_dict_user/")){
+    mkdir("./all_dict_user/");
+  }
+  if (!file_exists("./all_dict_user/".$Client_IP_n."/")){
+    mkdir("./all_dict_user/".$Client_IP_n."/");
   }
   $myfile = fopen("./all_dict/user_news.txt", "r")or die("Unable to open file!");
+  $str = '';
  while(! feof($myfile)){
     $str =  $str.fgets($myfile)."\n";
   }
@@ -19,7 +23,7 @@ function Do_new($Client_IP_n,$txt_n){
   $txt_a =  mb_split("\n",$txt_n);
 
   for($i=0;$i<count($txt_a);$i++){
-  	if(in_array($txt_a[$i],$user_a)){
+    if(in_array($txt_a[$i],$user_a)){
         continue;
     }
     else if($txt_a[$i] == "你可以選擇在這打上需要的詞彙："){

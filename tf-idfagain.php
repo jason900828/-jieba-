@@ -30,12 +30,10 @@
         <h4 class="my-0 font-weight-normal">依照下方步驟輸入</h4>
       </div>
       <div class="card-body">
-        <h1 class="card-title pricing-card-title">輸入編號</small></h1>
-        <ul class="list-unstyled mt-3 mb-4">
-          <li>將複製好的編號複製到下方框框中，並設定keyword數</li>
-        </ul>
+        <h1 class="card-title pricing-card-title">文檔編號</small></h1>
+        
         <div  class="input">
-            編號：<input type="text" id = "id_number" name="id_number" value="<?php echo $_GET['timenamefolder'];?>"> <br><br>
+            編號：<input type="text" id = "id_number" name="id_number" value="<?php echo $_GET['timenamefolder'];?>" readonly="readonly"> <br><br>
 
             keyword數：<input type = "number"id = "tfidf_rank" name="tfidf_rank" value="50" style="height:30px; width:50px;" >
         </div>
