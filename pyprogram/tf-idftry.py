@@ -1,163 +1,146 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+#! python3
+# coding=UTF-8
 """
 Created on Mon Oct  8 13:39:54 2018
 
 @author: rayzhan34
 """
-import time
-#輸入套件
 import os
+from sklearn import feature_extraction
+from sklearn.feature_extraction.text import TfidfTransformer
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import HashingVectorizer
+import numpy as np
+import time
 import sys
-#要注意txt是否是OS x 可以支援的
-#txt改完變成utf8後就不能再打開了
-corpus = []
+import json
+import csv
+def delect_Stopword(Folder_name):
 
+    #StopWord_combine()
+    stpwrdpath = "all_dict_user/"+Folder_name+"/all_stop.txt"
+    stpwrd_dic = open(stpwrdpath, 'r',encoding = 'utf-8')
+    stpwrdlst = stpwrd_dic.read().replace('\n', ' ').split()#將停用詞表轉換為list 
+    stpwrd_dic.close()#將文本中的詞語轉換為詞頻矩陣，矩陣元素a[i][j] 表示j詞在i類文本下的詞頻 
+
+    new_corpus = []
+    
+    stpwrdlst_n = []
+    for stop in stpwrdlst:
+        stop = stop.replace('\n','')
+        stpwrdlst_n.append(stop)
+    
+    return stpwrdlst_n
 starttime = time.time()
-stopword = []
- 
-with open('./all_dict/all_stop.txt','r',encoding = 'utf-8') as f : #讀取所有stopword
-    stopword = f.readlines()
-    for i in range(len(stopword)):
-        stopword[i] = stopword[i].strip('\n')
-          
-Folder_name = sys.argv[1]  #讀斷完詞後的資料夾編號，平常測試要將此改掉
+
+Folder_name = sys.argv[1]#sys.argv[1]# #讀斷完詞後的資料夾編號，平常測試要將此改掉
+rank = int(sys.argv[2])
+dotfidf = int(sys.argv[3])
 
 path = './cut_over/cut'+str(Folder_name)+'/'
 file_name = os.listdir(path)
 
-test = []
+corpus = []
+corpus_speech = []
 for doc in file_name:            
     with open(path+doc,'r',encoding = 'utf-8') as f:
-        test_str = '' 
-        for sen in f.readlines():
-            if sen == '\n':
-                continue
-            else:
-                test_str = test_str + sen
-    test_lst1 = test_str.split(' ')#將原本以空白分開的詞轉換成用list儲存
-    test_lst2 = []
-    for wor in test_lst1:#去除空值
-        if wor == '':
-            continue
-        else:
-            test_lst2.append(wor)
-    test.append(test_lst2)
-    
+        file_json = f.read()
+        file_lst = json.loads(file_json)
+        corpus_dict = {}
+        for word in file_lst:
+            corpus_dict[word[0]] = word[1]
+        corpus_speech.append(corpus_dict)
+        file_str = ''
+        with open(path+'content.txt','w',encoding = 'utf-8') as f:
+            for w in file_lst:
+                f.write(w[0]+' ')
+        with open(path+'content.txt','r',encoding = 'utf-8') as f:
+            file_str = f.read()
 
-#remainderWords = list(filter(lambda a: a not in stopword , test))#很多時間
+    corpus.append(file_str)
 
-hash_dict = {}  #計算每個詞出現次數，用dict儲存，key(word) : count
-total_lst = []  #每一篇文章總字數
-doc_count = 0   #有多少個文檔
-for t_lst in test:
-    hash_ = {}
-    for item in t_lst: #算詞頻
-        if item.strip('\n') in hash_:
-            hash_[item.strip('\n')] +=1
-        else:
-            hash_[item.strip('\n')] = 1
-         
-    for stop in stopword:  #去除stopword
-        try:
-            del hash_[stop]
-            #print(stop)
-        except:
-            continue
-    keyword = hash_.keys()
-    key_del = []
-    for k in keyword:#去除單個詞
-        if len(k)<2:
-            key_del.append(k)   
-    for k in key_del:
-        del hash_[k]
+stpwrdlst_n = delect_Stopword(str(Folder_name))
+vectorizer = CountVectorizer(stop_words = stpwrdlst_n)#創建詞袋數據結構#創建hash向量詞袋# 
+#vectorizer = HashingVectorizer(stop_words =stpwrdlst,n_features = 1000)#設置停用詞詞表
+tf = vectorizer.fit_transform(corpus)
+words=vectorizer.get_feature_names()#获取词袋模型中的所有词语 
+tf_weight=tf.toarray()
+
+if dotfidf:
+    transformer=TfidfTransformer()#该类会统计每个词语的tf-idf权值
+    tfidf = transformer.fit_transform(tf)#第一个fit_transform是计算tf-idf，第二个fit_transform是将文本转为词频矩阵    
+    tfidf_weight=tfidf.toarray()#将tf-idf矩阵抽取出来，元素a[i][j]表示j词在i类文本中的tf-idf权重 
+fn = 0
+path = './keyword/keyword'+str(Folder_name)+'/'
+
+if not os.path.isdir('./keyword'):
+    os.mkdir('./keyword')
+if not os.path.isdir(path):
+    os.mkdir(path)
+
+
+if dotfidf:
+    with open(path+'keyword.csv', 'w', newline='',encoding = 'big5') as csvfile:
+        # 建立 CSV 檔寫入器
+        writer = csv.writer(csvfile)
+        # 寫入一列資料
+        writer.writerow(['word','TF','IDF','TF-IDF(原始)', 'TF-IDF(標準化)','詞性','分類'])
+        for  w in range(len(tfidf_weight)):
+            
+            loc = np.argsort(-tfidf_weight[w])
+            corpus_speech_keys = corpus_speech[fn].keys()
+            for r in range(rank):
+                if tfidf_weight[w][loc[r]] ==0.0:
+                    break
+                    # 寫入另外幾列資料
+                tf_n = round(tf_weight[w][loc[r]]/len(corpus_speech[w]),4)
+                idf_n = round(transformer.idf_[loc[r]],4)
+                tfidf_n = round(tf_n*idf_n,4)
+                if words[loc[r]] in corpus_speech_keys :
+                    speech = corpus_speech[fn][words[loc[r]]]
+                else:
+                    speech = 'x'
+                category = file_name[fn].replace('.json','')
+                try:
+                    writer.writerow([words[loc[r]],tf_n,idf_n,tfidf_n,round(tfidf_weight[w][loc[r]],4),speech,category])
+                except:
+                    print('有字元無法用big5編碼<br/>')
+            fn+=1
+else:
+    with open(path+'keyword.csv', 'w', newline='',encoding = 'big5') as csvfile:
+        # 建立 CSV 檔寫入器
+        writer = csv.writer(csvfile)
+        # 寫入一列資料
+        writer.writerow(['word','TF','IDF','TF-IDF(原始)', 'TF-IDF(標準化)','詞性','分類'])
+        for  w in range(len(tf_weight)):
         
-    hash_dict[doc_count] = hash_
-    doc_count+=1
-    total = 0#此文檔的總字數
-    keyword = hash_.keys()
-    for k in keyword:
-        total = total + hash_[k]
-    total_lst.append(total)
-    
-
-#自建tfidf函數
-import math
-
-
-#count = Counter(test)
-
-#print(count)
-#print(count.most_common(10))
-
-def tf(count,total):
-    return count/total
-def n_containing(word,count_list):
-    #print(sum(1 for i in count_list if word in i))
-    
-    return sum(1 for i in count_list if word in i)  #轉成string查比較快
-def idf(word,count_list):
-    return math.log(len(count_list)/(1+n_containing(word,count_list)),10)
-#因為照原公式算出來的tf-idf值大多在小數點第二位以下，因此加權一萬以方便比較
-def tfidf(word,count,count_list,total):
-    return tf(count,total) * idf(word,count_list) * 100
-
-endtime1 = time.time()
-#count1 = list(hash_) 
-
-#print(len(count1))
-i = 0
-#print(hash_lst[0])
-#print("\n\n\n\n\n")
-#print(hash_lst[1])
-path = './keyword/keyword'+str(Folder_name)+'/'#開檔案+資料夾
-if os.path.isdir(path):
-    del_ = os.listdir(path)
-    for d in del_:
-        os.remove(path+d)
-    os.removedirs(path)
-if not os.path.isdir('./keyword/'):
-    os.mkdir('./keyword/')
-if not os.path.isdir(path):
-    os.mkdir(path)
-keyword_f = open(path+'keyword-by-tf_idf.txt', 'w',encoding = 'utf-8')
-
-path = './tf-idf/tf-idf'+str(Folder_name)+'/'#開檔案+資料夾
-if os.path.isdir(path):
-    del_ = os.listdir(path)
-    for d in del_:
-        os.remove(path+d)
-    os.removedirs(path)
-if not os.path.isdir('./tf-idf/'):
-    os.mkdir('./tf-idf/')
-if not os.path.isdir(path):
-    os.mkdir(path)
-tf_idf_f = open(path+'tf_idf.txt', 'w', encoding='utf-8')
-
-key_list = []
-for i in hash_dict.keys():
-    key_list.append(hash_dict[i].keys())
-    
-for i in range(doc_count):
-    scores = {}
-    
-    
-    for word in hash_dict[i].keys():#計算每一個詞的tf-idf
-        a = tfidf(word,hash_dict[i][word],key_list,total_lst[i])
-        scores.update({word:a})
-    
-    
-    sorted_words = sorted(scores.items(), key=lambda x: x[1], reverse=True)#排名
-    keyword_f.write("Top words in document "+str(i)+"\n")#寫入
-    for word, score in sorted_words[:5]:
-        keyword_f.write("Word: {}, TF-IDF: {}\n".format(word, round(score, 5)))
-    tf_idf_f.write("Top words in document "+str(i)+"\n")
-    for word, score in sorted_words:
-        tf_idf_f.write("Word: {}, TF-IDF: {}\n".format(word, round(score, 5)))
-    i+=1
-
-keyword_f.close()
-tf_idf_f.close()
+            
+            loc = np.argsort(-tf_weight[w])
+            corpus_speech_keys = corpus_speech[fn].keys()
+            if len(tf_weight)<1 or len(tf_weight)==1:
+                category = 'null'
+            else:
+                category = file_name[fn].replace('.json','')
+            for r in range(len(tf_weight[w])):
+                if tf_weight[w][loc[r]] == 0:
+                    break
+                tf_n = round(tf_weight[w][loc[r]]/len(corpus_speech[w]),4)
+                
+                if words[loc[r]] in corpus_speech_keys :
+                    speech = corpus_speech[fn][words[loc[r]]]
+                else:
+                    speech = 'x'
+                
+                
+                try:
+                    writer.writerow([words[loc[r]],tf_n,'null','null','null',speech,category])
+                    
+                except:
+                    print('有字元無法用big5編碼<br/>')
+                    
+            fn+=1
+file = './cut_over/cut'+str(Folder_name)+'/content.txt'
+os.remove(file)
 endtime = time.time()
 #print("end<br/>")
 

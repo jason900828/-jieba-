@@ -1,12 +1,13 @@
-#測試文本為維基百科20180920 大約1GB資料量
-coding = 'utf-8'
+#! python3
+# coding=UTF-8
+
 from os import listdir
 import time
 from fun import cut,get_data,store_data#,add_word
 import multiprocessing as mp
 import os
 import sys
-
+import json
 
 if __name__ == '__main__':
     #t1 = time.time()
@@ -34,23 +35,36 @@ if __name__ == '__main__':
     #上方程式碼為斷詞單進程
     大約要61分鐘
     """
+    t3 = time.time()
+    
     
     Folder_name = sys.argv[1]#2018101510141823
-    
+    f = open('./all_dict_user/'+str(Folder_name)+'/excel_category.json','r',encoding = 'utf-8')
+    jsondata = json.loads(f.read())
+    excel_where_category =[jsondata['excel_category']]
+    excel_where_content_at = [jsondata['excel_content']]
+    f.close()
     print("python:<br/>")
     
     
-    cuts,txt_long_lst,file_format = get_data(Folder_name)#e
+    cuts,txt_long_lst,file_format,fn_lst = get_data(Folder_name,excel_where_category,excel_where_content_at)#e,
     #add_word()#新增使用者想要的詞彙
     mod_list = []
-    t3 = time.time()
+    t4 = time.time()
+    print("start MP:"+str(t4-t3)+"<br/>")
     
     #print('wait parallel cut word<br/>')
-    processor = mp.cpu_count()
+    if (len(cuts)>1) and (len(cuts)<mp.cpu_count()):
+        processor = len(cuts)
+    else:
+        processor = mp.cpu_count()
+    
+    
+
     p = mp.Pool()
     
     for i in range(processor):
-        mod_list.append(p.apply_async(cut, args = (cuts,i,processor,)))
+        mod_list.append(p.apply_async(cut, args = (cuts,i,processor,Folder_name,)))
 
     p.close()
     p.join()
@@ -63,7 +77,7 @@ if __name__ == '__main__':
     
     path = './cut_over/cut'+str(Folder_name)+'/'
 
-    store_data(path,txt_long_lst,file_format,data)
+    store_data(path,txt_long_lst,file_format,data,fn_lst)
     
     #w = p.map(cut_cword,contenti,processor)
     

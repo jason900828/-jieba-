@@ -22,6 +22,9 @@ $(document).ready(function (e){
             processData:false,
             success: function(data){
                 d = data;
+                $("#result").html(d);
+                $("#loader").hide();
+                $("#loader2").hide();
             },
             
             error: function(){}             
@@ -29,9 +32,7 @@ $(document).ready(function (e){
     }));
     $(document).ajaxStop(function(){
 
-        $("#result").html(d);
-        $("#loader").hide();
-        $("#loader2").hide();
+        
     });
     
 });

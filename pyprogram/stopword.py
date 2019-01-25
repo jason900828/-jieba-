@@ -1,25 +1,23 @@
-def del_word():#新增停用詞
-    del_list = []
-    with open('../all_dict/del_words.txt', 'r', encoding='utf-8') as del_f :
-        del_list = del_f.readlines()
-    return del_list
+#! python3
+# coding=UTF-8
+def StopWord_combine(Client_IP):#將原本的stopword加上使用者不想看到的word
 
-    
-def StopWord_combine():#將原本的stopword加上使用者不想看到的word
-
-    with open('../all_dict/ch_stop.txt', 'r', encoding='utf-8') as stop_f :
+    with open('./all_dict/ch_stop.txt', 'r', encoding='utf-8') as stop_f :
         stop_word  = stop_f.readlines()
+    with open('./all_dict/user_stop.txt', 'r', encoding='utf-8') as stop_f :
+        stop_user  = stop_f.readlines()
+        for word in stop_user:
+            if word not in stop_word:
+                stop_word.append(word)
 
-    ne_del = del_word()
-    for temp_stop in ne_del:
-        stop_word.append(temp_stop)
-
-    with open('../all_dict/all_stop.txt', 'w', encoding='utf-8') as all_stop_f :
+    with open('./all_dict_user/'+Client_IP+'/all_stop.txt', 'a', encoding='utf-8') as all_stop_f :
+        all_stop_f.write('\n')
         for word in stop_word:
             if '\n' in word:
                 all_stop_f.write(word)
             else:
                 all_stop_f.write(word+'\n')
 
-      
-StopWord_combine()
+import sys
+Client_IP = str(sys.argv[1])
+StopWord_combine(Client_IP)

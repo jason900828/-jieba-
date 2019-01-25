@@ -28,4 +28,5 @@ tf-idf/*
 keyword/*
 cut_over/*
 all_dict_user/*
-data/*
+data/
+

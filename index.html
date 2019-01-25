@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
 <script src="js/check.js" ></script>
 <script src="js/ajax.js" ></script>
+
 </head>
 <body>
 
@@ -17,32 +18,43 @@
 
   <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center" id="Description">
       <h1 class="display-4">中文斷詞系統 + TF-IDF</h1>
-      <p class="lead">基於jieba製作斷詞系統，請依照以下步驟輸入資料並上傳檔案，按下確認後即可得到結果<br/>
-      *注意:經過測試，33MB的文本執行斷詞與TF-IDF需要大約100~110秒鐘，請耐心等待</p>
+      <p class="lead">基於jieba製作斷詞系統，請依照以下步驟輸入資料並上傳檔案，按下提交後即可得到結果<br/>
+      *注意：經過測試，33MB的文本執行斷詞與TF-IDF需要大約100~110秒鐘，請耐心等待</p>
   </div>
-
+<form action ="upload.php" name="form1" id = 'uploadform' method ="POST" enctype ="multipart/form-data" >
   <div class="card-deck mb-3 text-center" id="bar1">
     <div class="card mb-4 box-shadow">
       <div class="card-header">
         <h4 class="my-0 font-weight-normal">STEP1</h4>
       </div>
       <div class="card-body">
-        <h1 class="card-title pricing-card-title">輸入新詞</small></h1>
+        <h1 class="card-title pricing-card-title">輸入新增詞</small></h1>
         <ul class="list-unstyled mt-3 mb-4">
           <li>輸入注意事項：</li>
-          <li>1.請輸入中文並每一個詞需換行</li>
-          <li>2.如需要查詢詞性，右上角有詞性表可下載</li>
-          <li>3.輸入格式例子: 資策會 nt<br/>
+          <li>1.上傳字典檔為一次性使用，輸入詞彙則為永久性</li>
+          <li>2.請輸入中文並每一個詞需換行(Enter)</li>
+          <li>3.如需要查詢詞性，右上角有詞性表可下載</li>
+          <li>4.輸入格式例子: 資策會 nt<br/>
                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;國家公園</li>
+
         </ul>
         <div  class="input">
-          <form action ="./phpadddict/add_new.php"name="form2" method ="POST" id = "form_n">
-            <textarea id = "new_word" name="new_word" ></textarea>
+          <!--<form action ="./phpadddict/add_new.php"name="form2" method ="POST" id = "form_n">-->
+            <textarea id = "new_word" name="new_word" onclick="newclick()">你可以選擇在這打上需要的詞彙：</textarea>
+            
             <br />
             <br />
-            <button type ="submit" class ="btn btn-primary" >新增</button> 
-            <button type ="reset" class ="btn btn-primary">重新輸入</button>
-          </form>
+            <div class="custom-file">
+
+              <input type="file" id ="add_file" name="add_file" value="檔案上傳"onchange="addChange()" class="custom-file-input" id="inputGroupFile02">
+              <label id = "file_label1" class="custom-file-label" for="inputGroupFile02" >或是上傳字典檔(txt)</label>
+              <br />
+              <br />
+              <a class="btn btn-outline-primary" href="./all_dict/user_news.txt" download = "./all_dict/user_news.txt">曾上傳過的詞彙</a>
+            </div>
+            <!--<button type ="submit" class ="btn btn-primary" >新增</button> -->
+            <!--<button type ="reset" class ="btn btn-primary">重新輸入</button>-->
+          <!--</form>-->
         </div>
       </div>
     </div>
@@ -55,19 +67,28 @@
         <h1 class="card-title pricing-card-title">輸入停止詞</small></h1>
         <ul class="list-unstyled mt-3 mb-4">
           <li>輸入注意事項：</li>
-          <li>1.如不須TF-IDF可跳過此步驟</li>
-          <li>2.請輸入不想在TF-IDF出現的詞，ex:我、你、他</li>
-          <li>3.每一個詞需換行</li>
+          <li>1.如不需要TF-IDF可跳過此步驟</li>
+          <li>2.上傳字典檔為一次性使用，輸入詞彙則為永久性</li>
+          <li>3.請輸入不想在TF-IDF出現的詞，ex:我、你、他</li>
+          <li>4.每一個詞需換行(Enter)</li>
+          
           <br />
         </ul>
         <div  class="input">
-          <form  action ="./phpadddict/add_del.php"name="form3" method ="POST"id = "form_d">
-            <textarea id = "del_word" name="del_word" ></textarea>
+          <!--<form  action ="./phpadddict/add_del.php"name="form3" method ="POST"id = "form_d">-->
+            <textarea id = "del_word" name="del_word" onclick="delclick()" >你可以選擇在這打上需要的詞彙：</textarea>
             <br />
             <br />
-            <button type ="submit" class ="btn btn-primary" >新增</button> 
-            <button type ="reset" class ="btn btn-primary">重新輸入</button>
-          </form>
+            <div class="custom-file">
+              <input type="file" id ="del_file" name="del_file" value="檔案上傳"onchange="delChange()" class="custom-file-input" id="inputGroupFile02">
+              <label id = "file_label2" class="custom-file-label" for="inputGroupFile02" >或是上傳字典檔(txt)</label>
+              <br />
+              <br />
+              <a class="btn btn-outline-primary" href="./all_dict/user_stop.txt" download="./all_dict/user_stop.txt">曾上傳過的停止詞</a>
+            </div>
+            <!--<button type ="submit" class ="btn btn-primary" >新增</button> -->
+            <!--<button type ="reset" class ="btn btn-primary">重新輸入</button>-->
+          <!--</form>-->
         </div>
       </div>
     </div>
@@ -80,13 +101,13 @@
         <h1 class="card-title pricing-card-title">上傳檔案</small></h1>
         <ul class="list-unstyled mt-3 mb-4">
           <li>上傳注意事項：</li>
-          <li>1.目前僅支援txt檔</li>
-          <li>2.如需上傳多個檔案，請壓縮成zip檔上傳</li>
-          <li>3.需要上傳zip檔才能執行TF-IDF(至少兩個文檔在裡面)</li>
+          <li>1.目前僅支援txt與excel檔</li>
+          <li>2.如需上傳多個檔案，請壓縮成zip檔上傳(限txt)</li>
+          <li>3.需要上傳zip或excel檔才能執行TF-IDF(zip至少兩個文檔在裡面)</li>
           <br/>
         </ul>
         <div  class="input">
-          <form action ="upload.php" name="form1" id = 'uploadform' method ="POST" enctype ="multipart/form-data" > 
+          <!--<form action ="upload.php" name="form1" id = 'uploadform' method ="POST" enctype ="multipart/form-data" > -->
             <div class="custom-file">
               <input type="file" id ="my_file" name="my_file" value="檔案上傳"onchange="uploadChange()" class="custom-file-input" id="inputGroupFile02">
               <label id = "file_label" class="custom-file-label" for="inputGroupFile02" >點擊上傳</label>
@@ -97,16 +118,35 @@
             <input type="checkbox"  id = "tfidf" name="tfidf" value="1" onchange="boxChange()" >
             <br />
             <br />
+            <div id = "tfidf_r" style="visibility: hidden;">
+              <input type = "number"id = "tfidf_rank" name="tfidf_rank" value="50" style="height:30px; width:50px;" >
+            </div>
+            
+            <br />
+            <br />
             <button type ="submit" class ="btn btn-primary">提交</button> 
             <button type ="reset" class ="btn btn-primary">重新上傳</button> 
             <br />
             <br />
-          </form > 
+            <div id = "excel" style="display: none;">
+              <p>輸入範例：工作表1/次分類</p>
+              <p style = 'color:red;'>*如果未輸入工作表，則以抓取到的第一個工作表作為根據</p>
+              <p>Excel 分類依據：
+                <input type="text" name="excel_category"id = "excel_category" style="height:30px; width:200px;">
+              </p>
+              <br />
+              <p>Excel 文章位置：
+                <input type="text" name="excel_content"id = "excel_content" style="height:30px; width:200px;">
+              </p>
+            </div>
+            <br />
+            <br />
+          <!--</form >--> 
         </div>
       </div>
     </div>
   </div>
-
+</form >
   <div  id = "load">
     <div class="loader" id = "loader" ></div>
     <br />
