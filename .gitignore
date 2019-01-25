@@ -1,0 +1,31 @@
+*.bak
+.DS_Store
+*.DS_Store
+*.old
+web/token/export/*.csv
+web/text files/*.txt
+web/token_test/export/*.csv
+web/token_test/text files/2018010410524912/little.txt
+web/token_test/text files/2018010413582636/1MB.txt
+web/token_test/text files/2018010413540849/little.txt
+web/token_test/text files/2018010413540849/500K.txt
+web/token_test/text files/2018010413540849/1MB.txt
+web/token_test/text files/2018010413540849/100K.txt
+web/token_test/export/2018010413582636/1MB.csv
+web/token_test/export/2018010413540849/little.csv
+web/token_test/export/2018010413540849/500K.csv
+web/token_test/export/2018010413540849/1MB.csv
+web/token_test/export/2018010413540849/100K.csv
+web/token_test/export/2018010410524912/little.csv
+web/token/text files/2018021316035142/555.csv
+web/token/text files/2018010417242478/little.txt
+web/token/text files/2018010415073812/little.txt
+web/token/text files/2018010415025822/little.txt
+web/token/text files/201801041441299/little.txt
+web/token/text files/2018010414352281/1MB.txt
+pyprogram/__pycache__/*
+tf-idf/*
+keyword/*
+cut_over/*
+all_dict_user/*
+data/*
